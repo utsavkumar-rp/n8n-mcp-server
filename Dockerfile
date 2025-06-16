@@ -1,29 +1,32 @@
 # Stage 1: Build the application
-FROM node:20 as builder
+FROM node:20 AS builder
 
 WORKDIR /app
 
-# Copy package configuration and install dependencies
-COPY package.json package-lock.json ./
-RUN npm install
+# 1️⃣  Copy only dependency manifests first (keeps layer cache efficient)
+COPY package*.json ./
 
-# Copy the rest of the application source code
+# 2️⃣  Install deps *without* running any scripts ➜ skips the automatic `prepare`
+RUN npm ci --ignore-scripts            # dev + prod deps, no build yet
+
+# 3️⃣  Now bring in the full source tree (tsconfig.json, src/, …)
 COPY . .
 
-# Build the TypeScript source
+# 4️⃣  Build explicitly – everything is present now
 RUN npm run build
+
+# 5️⃣  Strip dev-dependencies; keeps runtime small
+RUN npm prune --omit=dev
 
 # Stage 2: Create the production image
 FROM node:20-slim
 
 WORKDIR /app
 
-# Copy package configuration and install only production dependencies
-COPY package.json package-lock.json ./
-RUN npm install --omit=dev
-
-# Copy the built application from the builder stage
+# 6️⃣  Copy ready-to-run artefacts from builder
 COPY --from=builder /app/build ./build
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
 
 # Set executable permissions for the binary
 RUN chmod +x build/index.js
@@ -32,4 +35,4 @@ RUN chmod +x build/index.js
 EXPOSE 8000
 
 # Set the entrypoint to run the MCP server
-ENTRYPOINT ["node", "build/index.js"]
+CMD ["node", "build/index.js"]
