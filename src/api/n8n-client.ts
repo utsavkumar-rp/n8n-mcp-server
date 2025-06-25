@@ -139,6 +139,15 @@ export class N8nApiService {
   async deleteExecution(id: string): Promise<any> {
     return this.client.deleteExecution(id);
   }
+
+  /**
+   * Get the underlying API client
+   * 
+   * @returns N8nApiClient instance
+   */
+  getClient(): N8nApiClient {
+    return this.client;
+  }
 }
 
 /**

@@ -110,7 +110,8 @@ function setupToolCallRequestHandler(server: Server): void {
         UpdateWorkflowHandler,
         DeleteWorkflowHandler,
         ActivateWorkflowHandler,
-        DeactivateWorkflowHandler
+        DeactivateWorkflowHandler,
+        GetApiToolHandler
       } = await import('../tools/workflow/index.js');
       
       const {
@@ -153,6 +154,9 @@ function setupToolCallRequestHandler(server: Server): void {
         result = await handler.execute(args);
       } else if (toolName === 'run_webhook') {
         const handler = new RunWebhookHandler();
+        result = await handler.execute(args);
+      } else if (toolName === 'get_api_tool') {
+        const handler = new GetApiToolHandler();
         result = await handler.execute(args);
       } else {
         throw new Error(`Unknown tool: ${toolName}`);
