@@ -36,7 +36,7 @@ export class N8nApiService {
    * @returns Array of workflow objects
    */
   async getWorkflows(): Promise<Workflow[]> {
-    return this.client.getWorkflows();
+    return this.client.getWorkflowsList();
   }
 
   /**
@@ -138,6 +138,15 @@ export class N8nApiService {
    */
   async deleteExecution(id: string): Promise<any> {
     return this.client.deleteExecution(id);
+  }
+
+  /**
+   * Get the underlying API client
+   * 
+   * @returns N8nApiClient instance
+   */
+  getClient(): N8nApiClient {
+    return this.client;
   }
 }
 
