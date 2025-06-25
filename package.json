@@ -1,6 +1,6 @@
 {
   "name": "@leonardsellem/n8n-mcp-server",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Model Context Protocol (MCP) server for n8n workflow automation",
   "main": "build/index.js",
   "type": "module",
