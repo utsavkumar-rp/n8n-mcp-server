@@ -30,8 +30,10 @@ describe('GetApiToolHandler', () => {
       expect(definition.name).toBe('get_api_tool');
       expect(definition.description).toContain('API-related');
       expect(definition.description).toContain('project Yogi');
-      expect(definition.description).toContain('tools folder');
-      expect(definition.description).toContain('Tool or Admin API Tool');
+      expect(definition.description).toContain('server-side filtering');
+      expect(definition.description).toContain('Tool');
+      expect(definition.description).toContain('API');
+      expect(definition.description).toContain('Admin Tool');
       expect(definition.inputSchema.type).toBe('object');
       expect(definition.inputSchema.properties).toHaveProperty('includeInactive');
       expect(definition.inputSchema.properties).toHaveProperty('limit');

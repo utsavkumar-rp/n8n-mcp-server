@@ -25,7 +25,8 @@ async function main() {
     console.log('Connectivity check successful.');
 
     console.log('Fetching workflows to find one to update...');
-    let workflows = await client.getWorkflows();
+    let workflowsResult = await client.getWorkflows();
+    let workflows = workflowsResult.data;
 
     if (!workflows || workflows.length === 0) {
       console.log('No workflows found. Cannot test update.');

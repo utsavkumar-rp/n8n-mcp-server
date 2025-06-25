@@ -36,7 +36,7 @@ export class N8nApiService {
    * @returns Array of workflow objects
    */
   async getWorkflows(): Promise<Workflow[]> {
-    return this.client.getWorkflows();
+    return this.client.getWorkflowsList();
   }
 
   /**
