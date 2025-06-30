@@ -200,7 +200,7 @@ export async function getSopGenerationGuideResource(): Promise<string> {
       description: 'Comprehensive guide for converting Standard Operating Procedures into executable n8n workflows',
       content: SOP_GENERATION_GUIDE,
       _links: {
-        self: formatResourceUri('sop-generation-guide'),
+        self: formatResourceUri('workflows'),
       },
       lastUpdated: new Date().toISOString(),
       metadata: {
@@ -235,7 +235,7 @@ export async function getSopGenerationGuideResource(): Promise<string> {
  * @returns Formatted resource URI
  */
 export function getSopGenerationGuideResourceUri(): string {
-  return formatResourceUri('sop-generation-guide');
+  return formatResourceUri('workflows');
 }
 
 /**

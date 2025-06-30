@@ -21,7 +21,6 @@ export class CreateWorkflowHandler extends BaseWorkflowToolHandler {
   async execute(args: Record<string, any>): Promise<ToolCallResult> {
     return this.handleExecution(async (args) => {
       const { name, nodes, connections, active, tags } = args;
-      
       if (!name) {
         throw new N8nApiError('Missing required parameter: name');
       }
