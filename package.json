@@ -1,6 +1,6 @@
 {
-  "name": "@utsavkumar-rp/n8n-mcp-server",
-  "version": "0.1.9",
+  "name": "@utsavkumar-rp/n8n-mcp-server-rzp",
+  "version": "0.1.10",
   "description": "Model Context Protocol (MCP) server for n8n workflow automation",
   "main": "build/index.js",
   "type": "module",

@@ -18,7 +18,7 @@ This project provides a Model Context Protocol (MCP) server that empowers AI ass
 ### Install from npm
 
 ```bash
-npm install -g @utsavkumar-rp/n8n-mcp-server
+npm install -g @utsavkumar-rp/n8n-mcp-server-rzp
 ```
 
 ### Install from source

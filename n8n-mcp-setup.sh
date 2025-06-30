@@ -108,7 +108,7 @@ generate_mcp_config() {
       "n8n-local": {
         "command": "npx",
         "args": [
-          "n8n-mcp-server"
+          "n8n-mcp-server-rzp"
         ],
         "env": {
           "N8N_API_URL":"https://n8n-conc.razorpay.com/api/v1",
