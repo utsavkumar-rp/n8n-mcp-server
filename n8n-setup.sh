@@ -146,7 +146,7 @@ generate_mcp_config() {
           "$build_path"
         ],
         "env": {
-          "N8N_HOST":"https://n8n-conc.razorpay.com/api/v1",
+          "N8N_API_URL":"https://n8n-conc.razorpay.com/api/v1",
           "N8N_API_KEY":"<API_KEY>"
         },
         "disabled": false,

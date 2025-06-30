@@ -2,201 +2,182 @@
 
 ## Overview
 
-The `get_api_tool` is a specialized workflow tool that retrieves API-related workflows from your n8n instance based on specific criteria. This tool is designed to help you quickly find workflows that are categorized as tools, APIs, or administrative utilities.
+The `get_api_tool` is a workflow tool that retrieves API-related workflows from your n8n instance. This tool efficiently fetches workflows tagged with "API" and supports pagination for browsing through results.
 
-## ⚡ **Performance Optimization**
+The tool returns workflows that are tagged with "API" along with pagination support for handling large result sets.
 
-**Previous Implementation**: Made 4 separate API calls
-- `GET /api/v1/workflows?projectId=eLrt0vDtupnZfKuD` (Project Yogi)
-- `GET /api/v1/workflows?tags=Tool` (Tool tag)
-- `GET /api/v1/workflows?tags=Admin+API+Tool` (Admin API Tool tag)
-- `GET /api/v1/workflows` (All workflows for folder filtering)
+## Functionality
 
-**✅ Optimized Implementation**: Makes 1 single API call
-- `GET /api/v1/workflows` (Fetch all workflows once, filter client-side)
+The tool searches for workflows that match the following criteria:
+- **Tag: API**: Workflows tagged with "API"
 
-**Benefits:**
-- **3-4x faster** execution time
-- **Reduced network overhead** 
-- **Lower API rate limit usage**
-- **Simpler error handling**
-- **Better performance** at scale
-
-## Criteria
-
-The tool searches for workflows that match **any** of the following criteria:
-
-1. **Project Yogi**: Workflows belonging to the project with ID `eLrt0vDtupnZfKuD`
-2. **Tools Folder**: Workflows located in the tools folder with ID `aqy20HQpJ9m7DIFH`
-3. **Specific Tags**: Workflows tagged with either "Tool" or "Admin API Tool"
-
-## Usage
+## Usage Examples
 
 ### Basic Usage
-
 ```javascript
-// Retrieve all API-related workflows
+// Get first 10 API tools (default behavior)
 const result = await getApiTool();
-```
 
-### With Options
-
-```javascript
-// Retrieve API-related workflows with options
-const result = await getApiTool({
-  includeInactive: false,  // Only active workflows
-  limit: 50               // Limit to 50 results
-});
-```
-
-## Example Response
-
-```json
+// Response format:
 {
-  "content": [
+  "workflows": [
     {
-      "type": "text", 
-      "text": "Found 3 API-related workflow(s)\n\n[\n  {\n    \"id\": \"123\",\n    \"name\": \"Merchant EMI Duration API\",\n    \"active\": true,\n    \"updatedAt\": \"2024-01-15T10:30:00.000Z\",\n    \"matchReason\": \"Project Yogi, Tag: Tool\",\n    \"tags\": [\"Tool\", \"EMI\"],\n    \"projectId\": \"eLrt0vDtupnZfKuD\"\n  }\n]"
+      "id": "123",
+      "name": "EMI Duration API",
+      "active": true,
+      "updatedAt": "2024-01-15T10:30:00.000Z",
+      "matchReason": "Tag: API",
+      "tags": ["API", "EMI"],
+      "projectId": "eLrt0vDtupnZfKuD"
     }
-  ]
+    // ... up to 10 workflows
+  ],
+  "nextCursor": "cursor-string-here",
+  "hasMore": true
 }
 ```
 
-## Search Functionality
-
-When you ask for specific functionality like **"merchant's emi_duration"**, the tool will:
-
-1. **Fetch all workflows** with a single API call
-2. **Filter by criteria** (Project Yogi, Tools folder, specific tags)
-3. **Search workflow content** for terms like "merchant", "emi", "duration"
-4. **Return matching workflows** with explanations
-
-## API Call Flow
-
-```
-User Request: "Give me API tool for merchant's emi_duration"
-     ↓
-Single API Call: GET /api/v1/workflows  
-     ↓
-Client-side filtering:
-  ✓ Project Yogi workflows
-  ✓ Tools folder workflows  
-  ✓ Tagged workflows (Tool, Admin API Tool)
-     ↓
-Content search for: merchant, emi, duration
-     ↓
-Return: Matching workflows with match reasons
+### Pagination
+```javascript
+// Get next page of results using cursor
+const result = await getApiTool({ 
+  cursor: "previous-cursor-string"
+});
 ```
 
-## Error Handling
+### Include/Exclude Inactive Workflows
+```javascript
+// Only get active workflows
+const result = await getApiTool({ 
+  includeInactive: false
+});
 
-The tool includes comprehensive error handling:
-- Network connectivity issues
-- API authentication failures
-- Invalid response formats
-- Empty result sets
-
-## Performance Metrics
-
-| Metric | Previous (4 API calls) | Optimized (1 API call) | Improvement |
-|--------|----------------------|----------------------|-------------|
-| Network requests | 4 | 1 | **75% reduction** |
-| Average response time | ~800ms | ~200ms | **4x faster** |
-| API rate limit usage | 4 calls | 1 call | **75% less** |
-| Error complexity | High (4 failure points) | Low (1 failure point) | **Simplified** |
+// Include both active and inactive (default)
+const result = await getApiTool({ 
+  includeInactive: true
+});
+```
 
 ## Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `includeInactive` | boolean | `true` | Whether to include inactive workflows in the results |
-| `limit` | number | `100` | Maximum number of workflows to return |
+| `includeInactive` | boolean | `true` | Whether to include inactive workflows in results |
+| `cursor` | string | `undefined` | Pagination cursor from previous response |
 
 ## Response Format
 
-The tool returns an array of workflow objects with the following structure:
+The tool returns an object with the following structure:
 
 ```json
 {
-  "id": "workflow-id",
-  "name": "Workflow Name",
-  "active": true,
-  "updatedAt": "2024-01-15T10:30:00Z",
-  "matchReason": "Project Yogi, Tag: Tool",
-  "tags": ["Tool", "API"],
-  "projectId": "eLrt0vDtupnZfKuD"
+  "workflows": [
+    {
+      "id": "workflow-id",
+      "name": "Workflow Name", 
+      "active": true,
+      "updatedAt": "2024-01-15T10:30:00Z",
+      "matchReason": "Tag: API",
+      "tags": ["API", "Tool"],
+      "projectId": "project-id-or-N/A"
+    }
+  ],
+  "nextCursor": "cursor-for-next-page",
+  "hasMore": true
 }
 ```
 
 ### Response Fields
 
-- **id**: Unique identifier for the workflow
-- **name**: Human-readable name of the workflow
+- **workflows**: Array of workflow objects matching the API criteria
+- **nextCursor**: Cursor string to use for fetching the next page (undefined if no more results)
+- **hasMore**: Boolean indicating whether there are more results available
+
+### Workflow Object Fields
+
+- **id**: Unique workflow identifier
+- **name**: Workflow name
 - **active**: Whether the workflow is currently active
-- **updatedAt**: Last modification timestamp
-- **matchReason**: Explanation of why this workflow was included (e.g., "Project Yogi", "Tag: Tool", "Tools Folder")
+- **updatedAt**: Last update timestamp
+- **matchReason**: Always "Tag: API" (indicates why this workflow was included)
 - **tags**: Array of tags associated with the workflow
-- **projectId**: ID of the project the workflow belongs to
+- **projectId**: Project ID the workflow belongs to (or "N/A" if not set)
 
-## Match Reasons
+## Pagination
 
-The `matchReason` field indicates why a workflow was included in the results:
+The tool supports cursor-based pagination:
 
-- **"Project Yogi"**: Workflow belongs to the Yogi project
-- **"Tag: Tool"**: Workflow has the "Tool" tag
-- **"Tag: Admin API Tool"**: Workflow has the "Admin API Tool" tag
-- **"Tools Folder"**: Workflow is located in the tools folder
-- **Multiple reasons**: When a workflow matches multiple criteria, reasons are combined (e.g., "Project Yogi, Tag: Tool")
-
-## Implementation Details
-
-### Deduplication
-
-The tool automatically deduplicates workflows to ensure each workflow appears only once in the results, even if it matches multiple criteria.
-
-### Error Handling
-
-The tool handles API errors gracefully and continues searching even if one criterion fails. Errors are logged but do not prevent the tool from returning results from other criteria.
-
-### Folder Detection
-
-Since the n8n API may not directly expose folder information, the tool uses multiple strategies to detect workflows in the tools folder:
-
-1. Direct folder ID matching
-2. Metadata inspection
-3. Naming convention analysis (fallback)
-
-## Example Scenarios
-
-### Scenario 1: Finding All Tool Workflows
-
-Use this tool to quickly identify all workflows that serve as tools or utilities in your n8n instance:
+1. **First request**: Call without a cursor to get the first page
+2. **Subsequent requests**: Use the `nextCursor` from the previous response
+3. **End of results**: When `hasMore` is `false` or `nextCursor` is undefined
 
 ```javascript
-const apiTools = await getApiTool({ includeInactive: false });
-console.log(`Found ${apiTools.length} active API tool workflows`);
+let cursor = undefined;
+let allWorkflows = [];
+
+do {
+  const result = await getApiTool({ cursor });
+  allWorkflows.push(...result.workflows);
+  cursor = result.nextCursor;
+} while (result.hasMore);
+
+console.log(`Total API workflows found: ${allWorkflows.length}`);
 ```
 
-### Scenario 2: Auditing Project Yogi
+## Use Cases
 
-Retrieve all workflows associated with the Yogi project for auditing or management purposes:
-
+### Browse API Tools
 ```javascript
-const yogiWorkflows = await getApiTool();
-const yogiOnly = yogiWorkflows.filter(w => w.matchReason.includes('Project Yogi'));
+// Quick overview of API tools
+const result = await getApiTool();
+console.log(`Found ${result.workflows.length} API tools`);
+result.workflows.forEach(workflow => {
+  console.log(`- ${workflow.name} (${workflow.active ? 'Active' : 'Inactive'})`);
+});
 ```
 
-### Scenario 3: Tag-based Workflow Management
-
-Find workflows tagged as administrative tools:
-
+### Get All API Tools
 ```javascript
-const adminTools = await getApiTool();
-const adminOnly = adminTools.filter(w => w.matchReason.includes('Admin API Tool'));
+// Fetch all API tools using pagination
+async function getAllApiTools() {
+  let allWorkflows = [];
+  let cursor = undefined;
+  
+  do {
+    const result = await getApiTool({ cursor });
+    allWorkflows.push(...result.workflows);
+    cursor = result.nextCursor;
+  } while (result.hasMore);
+  
+  return allWorkflows;
+}
 ```
+
+### Filter Active API Tools
+```javascript
+// Get only active API workflows
+const result = await getApiTool({ includeInactive: false });
+console.log(`Active API tools: ${result.workflows.length}`);
+```
+
+## Error Handling
+
+The tool handles errors gracefully:
+- Invalid parameters are handled with appropriate defaults
+- API connection errors are caught and reported clearly
+- Pagination errors don't stop the entire operation
+- Missing or invalid cursors are handled safely
+
+## Performance Notes
+
+- **Default limit**: Returns 10 workflows by default for quick responses
+- **Pagination**: Uses cursor-based pagination for efficient browsing
+- **Filtered queries**: Only fetches workflows tagged with "API" to reduce response size
+- **Pinned data exclusion**: Excludes pinned data to improve response times
 
 ## Related Tools
 
 - `list_workflows`: Lists all workflows without filtering
 - `get_workflow`: Retrieves a specific workflow by ID
-- Workflow management tools: `create_workflow`, `update_workflow`, `delete_workflow` 
+- Workflow management tools: `create_workflow`, `update_workflow`, `delete_workflow`
+- `activate_workflow`, `deactivate_workflow`: Manage workflow active status 
