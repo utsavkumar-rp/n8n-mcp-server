@@ -9,7 +9,6 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO_URL="https://github.com/utsavkumar-rp/n8n-mcp-server.git"
 CLONE_DIR="n8n-mcp-server"
 MCP_CONFIG_FILE=""
 
@@ -83,67 +82,33 @@ install_node() {
     fi
 }
 
-# Function to clone repository from git
-clone_repository() {
-    print_status "Cloning repository from GitHub..."
-    
-    # Check if git is available
-    if ! command_exists git; then
-        print_error "Git is not installed. Please install Git first."
-        exit 1
-    fi
-    
-    # Clean up existing directory if it exists
-    if [ -d "$CLONE_DIR" ]; then
-        print_warning "Directory $CLONE_DIR already exists. Removing it..."
-        rm -rf "$CLONE_DIR"
-    fi
-    
-    # Clone the repository
-    print_status "Cloning from $REPO_URL..."
-    if git clone "$REPO_URL" "$CLONE_DIR"; then
-        print_status "Repository cloned successfully to $CLONE_DIR"
-    else
-        print_error "Failed to clone repository from $REPO_URL"
-        exit 1
-    fi
-    
-    # Enter the directory
-    cd "$CLONE_DIR"
-    print_status "Changed to directory: $(pwd)"
-}
-
 
 # Function to install dependencies and build
 build_project() {
-    print_status "Installing dependencies..."
-    npm install
+    print_status "Installing mcp server..."
+    npm install -g @utsavkumar-rp/n8n-mcp-server
     
-    print_status "Building project..."
-    npm run build
-    
-    print_status "Project built successfully"
+    print_status "MCP server installed successfully"
 }
 
 # Function to generate MCP configuration
 generate_mcp_config() {
     local current_path=$(pwd)
-    local build_path="$current_path/build/index.js"
     MCP_CONFIG_FILE="$current_path/mcp.json"
     
     print_status "Generating MCP configuration at $MCP_CONFIG_FILE..."
     
     # Create .cursor directory if it doesn't exist
-    mkdir -p "$HOME/.cursor"
+    # mkdir -p "$HOME/.cursor"
     
     # Generate the JSON configuration
     cat > "$MCP_CONFIG_FILE" << EOF
 {
     "mcpServers": {
       "n8n-local": {
-        "command": "node",
+        "command": "npx",
         "args": [
-          "$build_path"
+          "n8n-mcp-server"
         ],
         "env": {
           "N8N_API_URL":"https://n8n-conc.razorpay.com/api/v1",
@@ -157,7 +122,6 @@ generate_mcp_config() {
 EOF
 
     print_status "MCP configuration generated successfully"
-    print_status "Build path: $build_path"
 }
 
 # Main execution
@@ -188,7 +152,7 @@ main() {
     fi
     
     # Download repository and build
-    clone_repository
+    # clone_repository
     build_project
     
     # Generate MCP configuration

@@ -1,6 +1,6 @@
 # n8n MCP Server
 
-[![npm version](https://badge.fury.io/js/%40leonardsellem%2Fn8n-mcp-server.svg)](https://badge.fury.io/js/%40leonardsellem%2Fn8n-mcp-server)
+[![npm version](https://badge.fury.io/js/%40utsavkumar-rp%2Fn8n-mcp-server.svg)](https://badge.fury.io/js/%40utsavkumar-rp%2Fn8n-mcp-server)
 
 A Model Context Protocol (MCP) server that allows AI assistants to interact with n8n workflows through natural language.
 
@@ -18,7 +18,7 @@ This project provides a Model Context Protocol (MCP) server that empowers AI ass
 ### Install from npm
 
 ```bash
-npm install -g @leonardsellem/n8n-mcp-server
+npm install -g @utsavkumar-rp/n8n-mcp-server
 ```
 
 ### Install from source
@@ -60,12 +60,12 @@ How you update the server depends on how you initially installed it.
 
 ### 1. Installed globally via npm
 
-If you installed the server using `npm install -g @leonardsellem/n8n-mcp-server`:
+If you installed the server using `npm install -g @utsavkumar-rp/n8n-mcp-server`:
 
 1.  Open your terminal or command prompt.
 2.  Run the following command to get the latest version:
     ```bash
-    npm install -g @leonardsellem/n8n-mcp-server@latest
+    npm install -g @utsavkumar-rp/n8n-mcp-server@latest
     ```
 3.  If the server is currently running (e.g., as a background process or service), you'll need to restart it for the changes to take effect.
 
@@ -380,3 +380,6 @@ If you're excited about the intersection of AI and workflow automation, and you'
 3.  Alternatively, feel free to reach out to the existing maintainers if you have questions.
 
 Let’s build the future of AI-powered workflow automation together! 🙌
+
+**Thanks to the community for the support!**
+[![Star History Chart](https://api.star-history.com/svg?repos=leonardsellem/n8n-mcp-server&type=Date)](https://www.star-history.com/#leonardsellem/n8n-mcp-server&Date)

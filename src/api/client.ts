@@ -84,15 +84,75 @@ export class N8nApiClient {
   /**
    * Get all workflows from n8n
    * 
-   * @returns Array of workflow objects
+   * @param params Optional query parameters to filter workflows
+   * @returns Object containing workflows array and pagination info
    */
-  async getWorkflows(): Promise<any[]> {
+  async getWorkflows(params?: {
+    active?: boolean;
+    tags?: string;
+    name?: string;
+    projectId?: string;
+    excludePinnedData?: boolean;
+    limit?: number;
+    cursor?: string;
+  }): Promise<{ data: any[]; nextCursor?: string | null }> {
     try {
-      const response = await this.axiosInstance.get('/workflows');
-      return response.data.data || [];
+      const queryParams = new URLSearchParams();
+      
+      if (params) {
+        if (params.active !== undefined) {
+          queryParams.append('active', params.active.toString());
+        }
+        if (params.tags) {
+          queryParams.append('tags', params.tags);
+        }
+        if (params.name) {
+          queryParams.append('name', params.name);
+        }
+        if (params.projectId) {
+          queryParams.append('projectId', params.projectId);
+        }
+        if (params.excludePinnedData !== undefined) {
+          queryParams.append('excludePinnedData', params.excludePinnedData.toString());
+        }
+        if (params.limit !== undefined) {
+          queryParams.append('limit', params.limit.toString());
+        }
+        if (params.cursor) {
+          queryParams.append('cursor', params.cursor);
+        }
+      }
+      
+      const url = `/workflows${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      const response = await this.axiosInstance.get(url);
+      
+      // Return the full response structure including pagination
+      return {
+        data: response.data.data || [],
+        nextCursor: response.data.nextCursor || null
+      };
     } catch (error) {
       throw handleAxiosError(error, 'Failed to fetch workflows');
     }
+  }
+
+  /**
+   * Get all workflows from n8n (simple version for backward compatibility)
+   * 
+   * @param params Optional query parameters to filter workflows
+   * @returns Array of workflow objects only
+   */
+  async getWorkflowsList(params?: {
+    active?: boolean;
+    tags?: string;
+    name?: string;
+    projectId?: string;
+    excludePinnedData?: boolean;
+    limit?: number;
+    cursor?: string;
+  }): Promise<any[]> {
+    const result = await this.getWorkflows(params);
+    return result.data;
   }
 
   /**
@@ -204,8 +264,10 @@ export class N8nApiClient {
   async updateWorkflow(id: string, workflow: Record<string, any>): Promise<any> {
     try {
       // Remove read-only properties that cause issues with n8n API v1
+      // According to n8n API schema, only name, nodes, connections, settings, and staticData are allowed
       const workflowToUpdate = { ...workflow };
       delete workflowToUpdate.id; // Remove id property as it's read-only
+      delete workflowToUpdate.active; // Remove active property as it's read-only
       delete workflowToUpdate.createdAt; // Remove createdAt property as it's read-only
       delete workflowToUpdate.updatedAt; // Remove updatedAt property as it's read-only
       delete workflowToUpdate.tags; // Remove tags property as it's read-only
