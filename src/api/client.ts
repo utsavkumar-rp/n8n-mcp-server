@@ -264,8 +264,10 @@ export class N8nApiClient {
   async updateWorkflow(id: string, workflow: Record<string, any>): Promise<any> {
     try {
       // Remove read-only properties that cause issues with n8n API v1
+      // According to n8n API schema, only name, nodes, connections, settings, and staticData are allowed
       const workflowToUpdate = { ...workflow };
       delete workflowToUpdate.id; // Remove id property as it's read-only
+      delete workflowToUpdate.active; // Remove active property as it's read-only
       delete workflowToUpdate.createdAt; // Remove createdAt property as it's read-only
       delete workflowToUpdate.updatedAt; // Remove updatedAt property as it's read-only
       delete workflowToUpdate.tags; // Remove tags property as it's read-only

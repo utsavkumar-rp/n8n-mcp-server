@@ -1,5 +1,5 @@
 {
-  "name": "@leonardsellem/n8n-mcp-server",
+  "name": "@utsavkumar-rp/n8n-mcp-server",
   "version": "0.1.8",
   "description": "Model Context Protocol (MCP) server for n8n workflow automation",
   "main": "build/index.js",
