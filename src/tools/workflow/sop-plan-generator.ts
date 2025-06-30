@@ -24,14 +24,24 @@ Execute these MCP tools in parallel to understand the current environment:
 \`\`\`
 mcp_n8n-local_list_workflows(active=true)
 mcp_n8n-local_list_workflows(active=false)
-mcp_n8n-local_list_api_workflows(active=true)
-mcp_n8n-local_list_api_workflows(active=false)
-mcp_n8n-local_list_tool_workflows(active=true)
-mcp_n8n-local_list_tool_workflows(active=false)
 \`\`\`
 
-### 1.2 Workflow Pattern Analysis
-For relevant workflows identified, execute:
+### 1.2 API Tool Discovery & Analysis
+Execute comprehensive API tool analysis with pagination:
+
+\`\`\`
+mcp_n8n-local_get_api_tool(includeInactive=true)
+\`\`\`
+
+**If pagination cursor is returned, continue fetching:**
+\`\`\`
+mcp_n8n-local_get_api_tool(cursor="<cursor_from_previous_response>", includeInactive=true)
+\`\`\`
+
+**Repeat until all API tools are discovered.**
+
+### 1.3 Detailed Workflow Pattern Analysis
+For each workflow identified (both regular and API workflows), execute:
 \`\`\`
 mcp_n8n-local_get_workflow(workflowId="<id>")
 \`\`\`
@@ -42,6 +52,10 @@ Focus on understanding:
 - **Validation Chains**: Sequential checks and error handling
 - **Routing Logic**: How requests are routed to different teams
 - **Response Generation**: How dynamic responses are built
+- **API Integration Patterns**: How external APIs are called and data is processed
+- **Authentication Mechanisms**: How API credentials and authentication are handled
+- **Error Handling**: How API failures and exceptions are managed
+- **Data Transformation**: How API responses are parsed and transformed
 
 ## Phase 2: SOP Content Analysis
 
@@ -75,19 +89,34 @@ Extract and categorize:
 ## Phase 3: Capability Mapping
 
 ### 3.1 Current Capability Assessment
-Based on workflow analysis, document:
+Based on comprehensive workflow and API analysis, document:
 
-**Available Capabilities:**
+**Available Workflow Capabilities:**
 - List all executeWorkflow nodes and their functions
-- Map API endpoints and data retrieval capabilities
+- Document decision-making patterns and conditional logic
 - Identify routing and notification mechanisms
-- Document response generation patterns
+- Map response generation patterns
 
-**SOP Requirements:**
-- Map SOP requirements to existing workflow capabilities
-- Identify data sources needed
-- Determine integration requirements
-- Specify logic requirements
+**Available API Capabilities:**
+- Catalog all API-tagged workflows and their functions
+- Document API endpoint mappings and data retrieval patterns
+- Map authentication and authorization mechanisms
+- Identify data transformation and validation patterns
+- Document error handling and retry mechanisms
+- Catalog API response formats and data structures
+
+**Integration Patterns:**
+- Document webhook endpoints and trigger mechanisms
+- Map data flow patterns between workflows
+- Identify reusable workflow components
+- Document API chaining and orchestration patterns
+
+**SOP Requirements Mapping:**
+- Map SOP decision points to existing workflow logic patterns
+- Identify data sources and API endpoints needed
+- Determine integration requirements and data dependencies
+- Specify business logic requirements and validation rules
+- Map stakeholder interactions to existing notification/routing patterns
 
 ## Output Format
 
@@ -106,8 +135,11 @@ Provide a structured analysis:
 
 ### Current Capability Assessment
 - Available n8n workflows and their relevance
-- Existing patterns that could be leveraged
-- Current API and data capabilities
+- Existing API-tagged workflows and their capabilities
+- Existing patterns that could be leveraged (decision trees, routing, validation)
+- Current API endpoints and data retrieval capabilities
+- Authentication and integration patterns available
+- Data transformation and error handling mechanisms
 
 ### Requirements Summary
 - Data sources needed

@@ -111,7 +111,8 @@ function setupToolCallRequestHandler(server: Server): void {
         DeleteWorkflowHandler,
         ActivateWorkflowHandler,
         DeactivateWorkflowHandler,
-        GetApiToolHandler
+        GetApiToolHandler,
+        SopPlanGeneratorTool
       } = await import('../tools/workflow/index.js');
       
       const {
@@ -157,6 +158,9 @@ function setupToolCallRequestHandler(server: Server): void {
         result = await handler.execute(args);
       } else if (toolName === 'get_api_tool') {
         const handler = new GetApiToolHandler();
+        result = await handler.execute(args);
+      } else if (toolName === 'generate_sop_plan_prompt') {
+        const handler = new SopPlanGeneratorTool();
         result = await handler.execute(args);
       } else {
         throw new Error(`Unknown tool: ${toolName}`);

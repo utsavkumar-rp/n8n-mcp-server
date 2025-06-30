@@ -15,6 +15,7 @@ import { getDeleteWorkflowToolDefinition, DeleteWorkflowHandler } from './delete
 import { getActivateWorkflowToolDefinition, ActivateWorkflowHandler } from './activate.js';
 import { getDeactivateWorkflowToolDefinition, DeactivateWorkflowHandler } from './deactivate.js';
 import { getGetApiToolDefinition, GetApiToolHandler } from './get-api-tool.js';
+import { getSopPlanGeneratorToolDefinition, SopPlanGeneratorTool } from './sop-plan-generator.js';
 
 // Export handlers
 export {
@@ -26,6 +27,7 @@ export {
   ActivateWorkflowHandler,
   DeactivateWorkflowHandler,
   GetApiToolHandler,
+  SopPlanGeneratorTool,
 };
 
 /**
@@ -43,5 +45,6 @@ export async function setupWorkflowTools(): Promise<ToolDefinition[]> {
     getActivateWorkflowToolDefinition(),
     getDeactivateWorkflowToolDefinition(),
     getGetApiToolDefinition(),
+    getSopPlanGeneratorToolDefinition(),
   ];
 }
