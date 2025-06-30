@@ -60,12 +60,12 @@ How you update the server depends on how you initially installed it.
 
 ### 1. Installed globally via npm
 
-If you installed the server using `npm install -g @utsavkumar-rp/n8n-mcp-server`:
+If you installed the server using `npm install -g @utsavkumar-rp/n8n-mcp-server-rzp`:
 
 1.  Open your terminal or command prompt.
 2.  Run the following command to get the latest version:
     ```bash
-    npm install -g @utsavkumar-rp/n8n-mcp-server@latest
+    npm install -g @utsavkumar-rp/n8n-mcp-server-rzp@latest
     ```
 3.  If the server is currently running (e.g., as a background process or service), you'll need to restart it for the changes to take effect.
 
@@ -158,13 +158,13 @@ Configure the following environment variables:
 From the installation directory:
 
 ```bash
-n8n-mcp-server
+n8n-mcp-server-rzp
 ```
 
 Or if installed globally:
 
 ```bash
-n8n-mcp-server
+n8n-mcp-server-rzp
 ```
 
 ### Integrating with AI Assistants
@@ -244,6 +244,38 @@ The webhook authentication is handled automatically using the `N8N_WEBHOOK_USERN
 - `workflow_delete`: Delete a workflow
 - `workflow_activate`: Activate a workflow
 - `workflow_deactivate`: Deactivate a workflow
+
+### SOP to Workflow Conversion
+
+Transform your Standard Operating Procedures (SOPs) into fully functional n8n workflows:
+
+- `generate_sop_plan_prompt`: Generate a comprehensive analysis prompt from SOP text
+- `execute_sop_plan`: Convert SOP implementation plans into actual n8n workflows
+
+**Complete SOP-to-Workflow Process:**
+1. **Analyze**: Use `generate_sop_plan_prompt` with your SOP text
+2. **Plan**: Execute the generated prompt with AI to create implementation plan  
+3. **Create**: Use `execute_sop_plan` to build the actual workflow
+
+Example workflow:
+```javascript
+// Step 1: Generate analysis prompt
+const analysis = await generateSopPlanPrompt({
+  sopText: "Customer Support SOP: When a ticket is received...",
+  sopTitle: "Customer Support Process"
+});
+
+// Step 2: [Execute analysis.sopPlanPrompt with AI to get implementation plan]
+
+// Step 3: Create workflow from plan
+const workflow = await executeSopPlan({
+  implementationPlan: implementationPlanFromAI,
+  workflowName: "Customer Support Automation",
+  dryRun: false // Set to true for testing
+});
+```
+
+For a complete example, see [SOP to Workflow Conversion Example](examples/sop-to-workflow-example.md).
 
 ### Execution Management
 

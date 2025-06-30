@@ -14,6 +14,9 @@ import {
   DeleteWorkflowHandler,
   ActivateWorkflowHandler,
   DeactivateWorkflowHandler,
+  GetApiToolHandler,
+  SopPlanGeneratorTool,
+  ExecuteSopPlanHandler,
 } from './index.js';
 
 /**
@@ -50,6 +53,15 @@ export default async function workflowHandler(
         
       case 'deactivate_workflow':
         return await new DeactivateWorkflowHandler().execute(args);
+        
+      case 'get_api_tool':
+        return await new GetApiToolHandler().execute(args);
+        
+      case 'generate_sop_plan_prompt':
+        return await new SopPlanGeneratorTool().execute(args);
+        
+      case 'execute_sop_plan':
+        return await new ExecuteSopPlanHandler().execute(args);
         
       default:
         throw new N8nApiError(`Unknown workflow tool: ${toolName}`);

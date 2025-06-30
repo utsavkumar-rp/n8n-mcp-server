@@ -86,7 +86,7 @@ install_node() {
 # Function to install dependencies and build
 build_project() {
     print_status "Installing mcp server..."
-    npm install -g @utsavkumar-rp/n8n-mcp-server
+    npm install -g @utsavkumar-rp/n8n-mcp-server-rzp
     
     print_status "MCP server installed successfully"
 }

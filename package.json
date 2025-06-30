@@ -15,7 +15,7 @@
     "prepare": "npm run build"
   },
   "bin": {
-    "n8n-mcp-server": "build/index.js"
+    "n8n-mcp-server-rzp": "build/index.js"
   },
   "keywords": [
     "mcp",
